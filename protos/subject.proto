@@ -1,0 +1,44 @@
+
+/*
+ This is a block comment.
+*/
+
+// This is one line comment.
+
+/* 
+  'syntax' should be the first uncommented line of a proto file.
+  If you didn't specify 'syntax', by default it will take 'proto2'.
+*/
+syntax = "proto3";
+
+/* 
+  'package' keyword is used to avoid name collision.
+  You canot have different package names in multiple files in same folder unless you are compiling a single proto file.
+*/
+package student;
+
+// This will tag the .go generated files with mentioned package name which is 'pb' here.
+option go_package="proto-pb";
+
+// 'enum' can be used to predefine values.
+enum Subject{
+  PHYSICS = 0; // enum values should always start with '0'
+  CHEMISTRY = 1;
+  MATHS = 2;
+}
+
+/*
+ 'message' keyword is used to define a message which will be in turn used as 'request' or 'response'.
+ 'Names' for 'message' will be in the standard of 'PascalCase' letters.
+ The field numbers '1,2,3...' represents the index of values appearing in the encoded streams.
+ It can also be represented in '1,3,2..', '1, 3,4' but not '1,2,2...'.
+
+ Field numbers '1-15' take 1 byte to encode, where as field numbers '16-2047' takes 2 bytes.
+ So you should reserve the numbers 1 through 15 for very frequently occurring message elements.
+*/
+message SubjectInfo{
+  int32 sl_no = 1; // Inside element names follow 'snake_case' standard.
+  string name = 2;
+  Subject subject = 3; // You can directly use outer defined enum values or you can define the enum values internal to the message.
+}
+

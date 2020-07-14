@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package student;
+
+option go_package = "proto-pb";
+
+/*
+  You can import messages from other protos using 'import' and with or without 'alias'
+*/
+import "subject.proto";
+
+message MarkReq{
+  SubjectInfo subject_info = 1; // You can reuse the predefined common message structure anytime.
+}
+
+message MarkResp{
+  SubjectInfo subject_info = 1;
+  int32 mark = 2; // There were 'required' and 'optional' parameters which can be set for fields on 'proto2' but it is removed in 'proto3'.
+                  // 'required' is removed due to backward compatibility issues and 'optional' is removed because without 'required', 'optional' 
+                  // doesn't make sense.
+}
+
+message AllMarksResp{
+  int32 sl_no = 1;
+  string name = 2;
+  message MarkInfo{           // You can define a message inside another message.
+    Subject subject_name = 1;
+    int32 mark = 2;
+  }
+  repeated MarkInfo marks = 3; // Protobuf supports 'repeated' keyword to create slice of values. 
+}
+
+/* 
+  'service' will help to establish a grpc channel and pass values between
+  the microservices (client and server) with the rpc communication.
+*/
+service StudentService{
+
+  rpc GetMark (MarkReq) returns (MarkResp); // Each message call invoked by a client will be part of rpc methods.
+                                            // It contains a request message and return message (response).
+
+  rpc GetAllMarks (MarkReq) returns (AllMarksResp); // We can define multiple rpc calls on single service.
+
+}
